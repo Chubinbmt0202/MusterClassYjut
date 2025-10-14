@@ -2,7 +2,8 @@
 require('dotenv').config(); // Nạp các biến môi trường từ file .env
 const express = require('express');
 const { Pool } = require('pg');
-const { connectToDatabase } = require('./src/config/db.config');
+const { connectToDatabase, client } = require('./src/config/db.config');
+const userRoutes = require('./src/api/user.routes');
 
 // Khởi tạo ứng dụng Express
 const app = express();
@@ -13,12 +14,17 @@ app.use(express.json());
 
 // Kết nối đến cơ sở dữ liệu PostgreSQL
 connectToDatabase();
+// Sử dụng các route đã định nghĩa trong userRoutes
+app.use('/api', userRoutes);
 
-// Định nghĩa các routes
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-    console.log('Hello World! Server is running.');
-
+app.get('/api/getData', async (req, res) => {
+    try {
+        const result = await client.query('SELECT * FROM NguoiDung');
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Error executing query', err.stack);
+        res.status(500).send('Error retrieving data from database');
+    }
 });
 
 // Bắt đầu lắng nghe các kết nối đến server
