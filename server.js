@@ -17,6 +17,7 @@ connectToDatabase();
 // Định nghĩa các routes
 app.get('/', (req, res) => {
     res.send('Hello World!');
+    console.log('Hello World! Server is running.');
 
 });
 
