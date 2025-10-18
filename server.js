@@ -2,11 +2,13 @@
 require('dotenv').config(); // Nạp các biến môi trường từ file .env
 const express = require('express');
 const { Pool } = require('pg');
+const cors = require('cors');
 const { connectToDatabase, client } = require('./src/config/db.config');
 const userRoutes = require('./src/api/user.routes');
 
 // Khởi tạo ứng dụng Express
 const app = express();
+app.use(cors()); // Sử dụng CORS để cho phép các yêu cầu từ các nguồn khác nhau
 const port = process.env.PORT || 3000;
 
 // Middleware để phân tích JSON
