@@ -1,36 +1,41 @@
-// Import các thư viện cần thiết
-require('dotenv').config(); // Nạp các biến môi trường từ file .env
+// server.js
 const express = require('express');
-const { Pool } = require('pg');
 const cors = require('cors');
-const { connectToDatabase, client } = require('./src/config/db.config');
-const userRoutes = require('./src/api/user.routes');
+const fileRoutes = require('./src/route/fileRoutes'); // Import routes
+// Thư viện dotenv để quản lý biến môi trường (cần cài npm i dotenv)
+// require('dotenv').config(); 
 
-// Khởi tạo ứng dụng Express
 const app = express();
-app.use(cors()); // Sử dụng CORS để cho phép các yêu cầu từ các nguồn khác nhau
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000; // Sử dụng biến môi trường
 
-// Middleware để phân tích JSON
+// --- 1. Cấu hình CORS ---
+const allowedOrigins = [
+    'http://localhost:5173',
+    'https://musterclassyjut.onrender.com' // Ví dụ domain đã deploy
+];
+
+const corsOptions = {
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+    optionsSuccessStatus: 204
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // Middleware cần thiết cho Express
 
-// Kết nối đến cơ sở dữ liệu PostgreSQL
-connectToDatabase();
-// Sử dụng các route đã định nghĩa trong userRoutes
-app.use('/api', userRoutes);
+// --- 2. Gắn Routes ---
+// Tất cả các route trong fileRoutes sẽ được thêm prefix '/api'
+app.use('/api', fileRoutes);
 
-app.get('/api/getData', async (req, res) => {
-    try {
-        const result = await client.query('SELECT * FROM NguoiDung');
-        res.json(result.rows);
-    } catch (err) {
-        console.error('Error executing query', err.stack);
-        res.status(500).send('Error retrieving data from database');
-    }
-});
-
-// Bắt đầu lắng nghe các kết nối đến server
+// --- 3. Khởi động Server ---
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Server is running on port ${port}`);
 });
-
