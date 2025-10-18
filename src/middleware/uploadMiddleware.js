@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
 // Cấu hình Multer: giới hạn 1 file với key là 'document'
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 10 * 1024 * 1024 } // Giới hạn 10MB
+    limits: { fileSize: 20 * 1024 * 1024 } // Giới hạn 20MB
 }).single('document');
 // Xuất middleware đã cấu hình để sử dụng trong routes
 module.exports = upload;
