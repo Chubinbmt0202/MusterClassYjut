@@ -11,7 +11,8 @@ const port = process.env.PORT || 3000; // Sử dụng biến môi trường
 // --- 1. Cấu hình CORS ---
 const allowedOrigins = [
     'http://localhost:5173',
-    'https://musterclassyjut.onrender.com' // Ví dụ domain đã deploy
+    'https://musterclassyjut.onrender.com', // Ví dụ domain đã deploy,
+    'https://frontend-edu-play.vercel.app/'
 ];
 
 const corsOptions = {
