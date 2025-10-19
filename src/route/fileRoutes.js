@@ -93,7 +93,7 @@ const processFileHandler = async (req, res) => {
                             **Định dạng đầu ra:**
                             Bạn phải trả về một đối tượng JSON duy nhất theo cấu trúc sau. Đảm bảo tất cả các trường (keys) và kiểu dữ liệu (values) đều chính xác.
 
-                            \`\`\`json
+                            
                             {
                             "lesson_title": "",
                             "generated_games": [
@@ -174,7 +174,6 @@ const processFileHandler = async (req, res) => {
                                 }
                             ]
                             }
-                            \`\`\`
                             `;
 
     try {
