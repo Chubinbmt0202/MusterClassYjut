@@ -9,7 +9,7 @@ const router = express.Router();
 
 // khởi tạo gemini client
 const ai = new GoogleGenAI({
-    apiKey: process.env.GEMINI_API_KEY, // Sử dụng biến môi trường để bảo mật
+    apiKey: "AIzaSyDSoUFGb0wZk9g1va_y-TCV9AA14UJZ24w", // Sử dụng biến môi trường để bảo mật
 });
 
 console.log("Sử dụng GEMINI_API_KEY:", process.env.GEMINI_API_KEY);
