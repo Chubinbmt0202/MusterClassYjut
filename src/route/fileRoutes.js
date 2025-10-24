@@ -40,6 +40,10 @@ function fileToGenerativePart(path, mimeType) {
 // Hàm xử lý logic chính sau khi file được upload
 const processFileHandler = async (req, res) => {
     // Nếu Multer thành công, req.file sẽ có dữ liệu
+    const { classTaught, numQuestions } = req.body;
+
+    // 💡 SỬA LỖI LOG: Đổi req.bodys thành req.body và in ra các giá trị
+    console.log("Dữ liệu Form (classTaught, numQuestions):", { classTaught, numQuestions });
     if (!req.file || Object.keys(req.file).length === 0) {
         return res.status(400).json({
             success: false,
@@ -50,15 +54,16 @@ const processFileHandler = async (req, res) => {
     console.log("File đã được tải lên:", req.file);
     const { path, mimeType, filename } = req.file;
     const userPrompt = `Bạn là một trợ lý giáo dục AI chuyên tạo nội dung tương tác cho học sinh tiểu học.
-                            Nhiệm vụ của bạn là phân tích một bài giảng được cung cấp và tạo ra các loại câu hỏi/trò chơi phù hợp, hấp dẫn cho học sinh tiểu học (lớp 2)).
+                            Nhiệm vụ của bạn là phân tích một bài giảng được cung cấp và tạo ra các loại câu hỏi/trò chơi phù hợp, hấp dẫn cho học sinh tiểu học ${classTaught}.
 
                             Dữ liệu đầu vào:
                             - Tiêu đề bài giảng: ""
                             - Nội dung bài giảng: ""
-                            - Cấp độ học sinh: Lớp 2
+                            - Cấp độ học sinh: ${classTaught}
+                            - Số lượng câu hỏi/trò chơi cần tạo: ${numQuestions} câu hỏi cho mỗi loại trò chơi. 
 
                             Hãy tạo ra một đối tượng JSON duy nhất chứa tất cả các loại trò chơi yêu cầu.
-                            Mỗi loại trò chơi phải chứa ít nhất 3 mục (câu hỏi, cặp nối, thẻ, v.v.).
+                            Mỗi loại trò chơi phải chứa ít nhất ${numQuestions} câu hỏi dựa trên nội dung bài giảng.
 
                             Các loại trò chơi cần tạo:
 
@@ -66,7 +71,7 @@ const processFileHandler = async (req, res) => {
                                 * **Trắc nghiệm A, B, C, D:**
                                     * Tạo câu hỏi dựa trên các thông tin, sự kiện, khái niệm quan trọng trong bài giảng.
                                     * Mỗi câu hỏi phải có 1 đáp án đúng và 3 đáp án nhiễu (sai nhưng hợp lý, không quá dễ đoán hoặc quá lạc đề).
-                                    * Ngôn ngữ phải đơn giản, rõ ràng, phù hợp với học sinh tiểu học Lớp 2.
+                                    * Ngôn ngữ phải đơn giản, rõ ràng, phù hợp với học sinh tiểu học ${classTaught}.
                                 * **Đúng/Sai:**
                                     * Tạo các nhận định (statements) dựa trên nội dung bài giảng.
                                     * Một nửa số nhận định nên là đúng, và một nửa là sai (bằng cách thay đổi một chi tiết nhỏ hoặc phủ định thông tin đúng).
@@ -88,7 +93,7 @@ const processFileHandler = async (req, res) => {
                             4.  **Phân loại:**
                                 * Xác định 2-3 danh mục (categories) chính có trong bài giảng.
                                 * Liệt kê các mục (items) thuộc về mỗi danh mục đó.
-                                * Đảm bảo các mục được phân loại rõ ràng và không chồng chéo, phù hợp với Lớp 2.
+                                * Đảm bảo các mục được phân loại rõ ràng và không chồng chéo, phù hợp với Lớp ${classTaught}.
 
                             **Định dạng đầu ra:**
                             Bạn phải trả về một đối tượng JSON duy nhất theo cấu trúc sau. Đảm bảo tất cả các trường (keys) và kiểu dữ liệu (values) đều chính xác.
